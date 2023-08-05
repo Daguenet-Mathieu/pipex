@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:25 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/03 17:40:45 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:19:33 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static int	get_fd(unsigned char *file_name, int option, int option_2)
 	int	fd;
 
 	fd = 0;
-	printf("option == %d et option2 == %d\n", option, option_2);
 	if (option == HEREDOC)
 		fd = open((const char *)file_name, O_RDWR | O_CREAT,
 				S_IROTH | S_IWOTH);
@@ -73,8 +72,6 @@ int	get_infile(t_env *env, char *argv)
 	if (!env->infile.file_name)
 		return (0);
 	env->infile.fd = get_fd(env->infile.file_name, INFILE, env->heredoc);
-	if (env->infile.fd == -1)
-		return (0);
 	return (1);
 }
 

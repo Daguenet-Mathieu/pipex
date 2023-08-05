@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/05 18:46:59 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:22:37 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,16 @@ int	ft_dup(int infile, int outfile, t_env *env)
 	return (res);
 }
 
+void	bash_error(char *s1, char *s2, char *s3)
+{
+	if (s1)
+		error(s1);
+	if (s2)
+		error(s2);
+	if (s3)
+		error(s3);
+}
+
 char	*check_access(char *cmd, char **path)
 {
 	int		i;
@@ -46,12 +56,10 @@ char	*check_access(char *cmd, char **path)
 	{
 		if (!access(cmd, F_OK))
 			return (ft_strdup(cmd));
-		error("bash: ");
-		error(cmd);
-		error(": No such file or directory\n");
+		bash_error("bash: ", cmd, ": No such file or directory\n");
 		return (NULL);
 	}
-	while (path[i])
+	while (path && path[i])
 	{
 		pathed = ft_strjoin(path[i], cmd, '/');
 		if (!pathed)
@@ -63,8 +71,7 @@ char	*check_access(char *cmd, char **path)
 	}
 	if (!access(cmd, F_OK))
 		return (ft_strdup(cmd));
-	error(cmd);
-	error(": command not found\n");
+	bash_error(NULL, cmd, ": command not found\n");
 	return (NULL);
 }
 
@@ -88,8 +95,24 @@ void	super_exec(t_env *env, int i)
 	char	**cmd;
 	char	*pathed;
 
+	if (env->infile.fd == -1 && i == 0)
+	{
+		bash_error("bash: ", (char *)env->infile.file_name, ": No such file or directory\n");
+		free_infile(env);
+		close(env->pipe[WRITE]);
+		close(env->pipe[READ]);
+		free_outfile(env);
+		exit(127);
+	}
 	path = ft_split(get_path(env->env), ':');
 	cmd = ft_split(env->lst_cmd[i], ' ');
+	if (!path || !cmd)
+	{
+		free(path);
+		free(cmd);
+		failure_critic(env);
+		exit (127);
+	}
 	pathed = check_access(cmd[0], path);
 	if (!pathed)
 	{
