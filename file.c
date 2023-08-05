@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:25 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/05 21:19:33 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:23:33 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	get_fd(unsigned char *file_name, int option, int option_2)
 				S_IROTH | S_IWOTH);
 	else if (option == INFILE)
 		fd = open((const char *)file_name, O_RDONLY);
-	else if (option == OUTFILE && option_2)
+	else if (option == OUTFILE && !option_2)
 		fd = open((const char *)file_name, O_TRUNC | O_WRONLY | O_CREAT,
 				S_IWUSR | S_IRUSR | S_IROTH | S_IRGRP);
 	else
@@ -68,6 +68,7 @@ int	get_outfile(t_env *env, char *argv)
 
 int	get_infile(t_env *env, char *argv)
 {
+	
 	env->infile.file_name = (unsigned char *)ft_strdup(argv);
 	if (!env->infile.file_name)
 		return (0);

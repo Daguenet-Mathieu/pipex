@@ -18,7 +18,7 @@ DEPS = $(SRCS:.c=.d)
 
 CC = cc
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -g
 
 $(NAME) : $(OBJS) $(HEADER)
 		 $(CC) $(FLAGS) $(OBJS) -o $(NAME)

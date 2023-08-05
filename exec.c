@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/05 21:22:37 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:47:34 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,10 @@ void	super_exec(t_env *env, int i)
 	char	**cmd;
 	char	*pathed;
 
+	dprintf(2, "cc\n");
 	if (env->infile.fd == -1 && i == 0)
 	{
+		dprintf(2, "1\n");
 		bash_error("bash: ", (char *)env->infile.file_name, ": No such file or directory\n");
 		free_infile(env);
 		close(env->pipe[WRITE]);
@@ -106,14 +108,16 @@ void	super_exec(t_env *env, int i)
 	}
 	path = ft_split(get_path(env->env), ':');
 	cmd = ft_split(env->lst_cmd[i], ' ');
-	if (!path || !cmd)
+	if (!cmd)
 	{
+		dprintf(2, "path == %p, cmd == %p\n", path, cmd);
 		free(path);
 		free(cmd);
 		failure_critic(env);
 		exit (127);
 	}
 	pathed = check_access(cmd[0], path);
+	dprintf(2, "cmd == %s\n", pathed);
 	if (!pathed)
 	{
 		free(path);
@@ -191,7 +195,10 @@ void	exec(t_env *env)
 		}
 		pid = fork();
 		if (pid == -1)
+		{
+			dprintf(2, "coucou\n");
 			failure_critic(env);
+		}
 		else if (pid == 0)
 			super_exec(env, i);
 		if (i == 0)
