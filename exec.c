@@ -6,21 +6,12 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/03 18:14:09 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/05 18:46:59 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-/*int ft_strncmp(char *s1, char *s2, int n)
-{
-    int i;
-
-    i = 0;
-    while ((s1 && s2) && (s1[i] == s2[i]) && i < n - 1)
-        i++;
-    return (s1[i] - s2[i]);
-}*/
 int failure_critic(t_env *env)
 {
     (void) env;
@@ -132,6 +123,26 @@ void	super_exec(t_env *env, int i)
 			exit (127);
 		}
 	}
+	if (i == 0)
+	{
+		free_infile(env);
+		close(env->pipe[WRITE]);
+		close(env->pipe[READ]);
+		free_outfile(env);
+	}
+	else if (i == env->nb_cmd - 1)
+	{
+		close(env->prev_pipe);
+		free_outfile(env);
+	}
+	else
+	{
+		close(env->prev_pipe);
+		close(env->pipe[WRITE]);
+		close(env->pipe[READ]);
+		free_outfile(env);	
+	}
+		
 	if (execve(pathed, cmd, env->env) == -1)
 	{
 		free(path);
