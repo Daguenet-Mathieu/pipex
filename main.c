@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/03 17:44:07 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/06 21:47:01 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,8 @@ int	main(int argc, char **argv, char **env_p)
 		return (0);
 	if (env.heredoc && !get_infile_heredoc(&env))
 		return (0);
-	else
-	{
-		if (!get_infile(&env, argv[1]))
-			return (0);
-	}
+	if (!env.heredoc && !get_infile(&env, argv[1]))
+		return (0);
 	if (!get_outfile(&env, argv[argc - 1]))
 		return (free_infile(&env), 0);
 	exec(&env);

@@ -6,44 +6,24 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/05 23:47:34 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/06 23:26:07 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int failure_critic(t_env *env)
+char	*get_path(char **env)
 {
-    (void) env;
-    return (0);
-}
+	int	i;
 
-int	ft_dup(int infile, int outfile, t_env *env)
-{
-	int	res;
-
-	res = 1;
-	if (dup2(infile, READ) == -1)
+	i = 0;
+	while (env[i])
 	{
-		perror("dup2");
-		res = failure_critic(env);\
+		if (!ft_strncmp(env[i], "PATH=", 5))
+			return (&env[i][5]);
+		i++;
 	}
-	if (dup2(outfile, WRITE) == -1)
-	{
-		perror("dup2");
-		res = failure_critic(env);
-	}
-	return (res);
-}
-
-void	bash_error(char *s1, char *s2, char *s3)
-{
-	if (s1)
-		error(s1);
-	if (s2)
-		error(s2);
-	if (s3)
-		error(s3);
+	return (NULL);
 }
 
 char	*check_access(char *cmd, char **path)
@@ -52,7 +32,8 @@ char	*check_access(char *cmd, char **path)
 	char	*pathed;
 
 	i = 0;
-	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
+	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/') || \
+	(cmd[0] == '.' && cmd[1] == '.' && cmd[2] == '/'))
 	{
 		if (!access(cmd, F_OK))
 			return (ft_strdup(cmd));
@@ -69,23 +50,7 @@ char	*check_access(char *cmd, char **path)
 		free(pathed);
 		i++;
 	}
-	if (!access(cmd, F_OK))
-		return (ft_strdup(cmd));
 	bash_error(NULL, cmd, ": command not found\n");
-	return (NULL);
-}
-
-char	*get_path(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (!ft_strncmp(env[i], "PATH=", 5))
-			return (&env[i][5]);
-		i++;
-	}
 	return (NULL);
 }
 
@@ -95,89 +60,25 @@ void	super_exec(t_env *env, int i)
 	char	**cmd;
 	char	*pathed;
 
-	dprintf(2, "cc\n");
 	if (env->infile.fd == -1 && i == 0)
-	{
-		dprintf(2, "1\n");
-		bash_error("bash: ", (char *)env->infile.file_name, ": No such file or directory\n");
-		free_infile(env);
-		close(env->pipe[WRITE]);
-		close(env->pipe[READ]);
-		free_outfile(env);
-		exit(127);
-	}
+		handle_invalide_in(env);
+	if (env->outfile.fd == -1)
+		handle_invalid_out(env);
 	path = ft_split(get_path(env->env), ':');
 	cmd = ft_split(env->lst_cmd[i], ' ');
 	if (!cmd)
-	{
-		dprintf(2, "path == %p, cmd == %p\n", path, cmd);
-		free(path);
-		free(cmd);
-		failure_critic(env);
-		exit (127);
-	}
+		fail_cmd(env, cmd, path);
 	pathed = check_access(cmd[0], path);
-	dprintf(2, "cmd == %s\n", pathed);
 	if (!pathed)
-	{
-		free(path);
-		free(cmd);
-		failure_critic(env);
-		exit (127);
-	}
-	if (i == 0)
-	{
-		if (!ft_dup(env->infile.fd, env->pipe[WRITE], env))
-		{
-			failure_critic(env);
-			exit (127);
-		}
-	}
-	else if (i == env->nb_cmd - 1)
-	{
-
-		if (!ft_dup(env->prev_pipe, env->outfile.fd, env))
-		{
-			failure_critic(env);
-			exit (127);
-		}
-	}
-	else
-	{
-		if (!ft_dup(env->prev_pipe, env->pipe[WRITE], env))
-		{
-			failure_critic(env);
-			exit (127);
-		}
-	}
-	if (i == 0)
-	{
-		free_infile(env);
-		close(env->pipe[WRITE]);
-		close(env->pipe[READ]);
-		free_outfile(env);
-	}
-	else if (i == env->nb_cmd - 1)
-	{
-		close(env->prev_pipe);
-		free_outfile(env);
-	}
-	else
-	{
-		close(env->prev_pipe);
-		close(env->pipe[WRITE]);
-		close(env->pipe[READ]);
-		free_outfile(env);	
-	}
-		
-	if (execve(pathed, cmd, env->env) == -1)
-	{
-		free(path);
-		free(cmd);
-		failure_critic(env);
-		exit(0);
-	}
-
+		fail_cmd(env, cmd, path);
+	dup_all(env, i);
+	close_all(env, i);
+	execve(pathed, cmd, env->env);
+	ft_freetab(path);
+	ft_freetab(cmd);
+	free(pathed);
+	failure_critic(env);
+	exit(0);
 }
 
 void	exec(t_env *env)
@@ -196,27 +97,13 @@ void	exec(t_env *env)
 		pid = fork();
 		if (pid == -1)
 		{
-			dprintf(2, "coucou\n");
 			failure_critic(env);
+			env->nb_cmd = i;
+			return ;
 		}
 		else if (pid == 0)
 			super_exec(env, i);
-		if (i == 0)
-		{
-			free_infile(env);
-			close(env->pipe[WRITE]);
-			env->prev_pipe = env->pipe[READ];
-		}
-		else if (i == env->nb_cmd - 1)
-		{
-			close(env->prev_pipe);
-			free_outfile(env);
-		}
-		else
-		{
-			close(env->prev_pipe);
-			close(env->pipe[WRITE]);
-		}
+		close_parent(env, i);
 		env->prev_pipe = env->pipe[READ];
 		env->pids[i] = pid;
 		i++;

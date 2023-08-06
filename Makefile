@@ -11,6 +11,8 @@ SRCS =	main.c\
 		file.c\
 		file_utils.c\
 		exec.c\
+		dup_close.c\
+		error_utils.c\
 		get_next_line.c
 
 OBJS = $(SRCS:.c=.o)
