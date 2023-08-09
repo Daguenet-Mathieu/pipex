@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 22:28:04 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/09 17:41:43 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,6 @@ void	handle_invalid_out(t_env *env)
 	close(env->pipe[WRITE]);
 	close(env->pipe[READ]);
 	free_outfile(env);
+	free(env->pids);
 	exit(1);
 }

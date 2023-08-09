@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:52 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 22:50:05 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/09 17:38:08 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	free_infile(t_env *env)
 {
-	if (env->infile.fd && env->infile.file_name)
+	if (env->infile.fd != -1 && env->infile.file_name)
 		close(env->infile.fd);
 	free(env->infile.file_name);
 	env->infile.file_name = NULL;
@@ -22,7 +22,7 @@ void	free_infile(t_env *env)
 
 void	free_outfile(t_env *env)
 {
-	if (env->outfile.fd && env->outfile.file_name)
+	if (env->outfile.fd != -1 && env->outfile.file_name)
 		close(env->outfile.fd);
 	free(env->outfile.file_name);
 	env->outfile.file_name = NULL;

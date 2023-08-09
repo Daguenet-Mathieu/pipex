@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 23:26:07 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/09 17:34:15 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ char	*check_access(char *cmd, char **path)
 	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/') || \
 	(cmd[0] == '.' && cmd[1] == '.' && cmd[2] == '/'))
 	{
-		if (!access(cmd, F_OK))
+		if (!access(cmd, F_OK | X_OK))
 			return (ft_strdup(cmd));
-		bash_error("bash: ", cmd, ": No such file or directory\n");
+		bash_error("bash: ", cmd, NULL);
+		perror(" ");
 		return (NULL);
 	}
 	while (path && path[i])

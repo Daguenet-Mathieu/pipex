@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:25 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/09 09:03:01 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/09 17:39:25 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static unsigned char	*get_file_name(void)
 	file_name[10] = 0;
 	if (read(fd, file_name, 10) == -1)
 		return (free(file_name), close(fd), NULL);
+	close(fd);
 	while (i < 10)
 	{
 		file_name[i] = file_name[i] % 26 + 'A';
