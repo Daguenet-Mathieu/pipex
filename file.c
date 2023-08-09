@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:25 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 21:51:41 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/09 09:03:01 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,17 @@ void	fill_here_doc(t_env *env)
 
 int	get_infile_heredoc(t_env *env)
 {
+	int	tmp_fd;
+
 	env->infile.file_name = get_file_name();
 	if (!env->infile.file_name)
 		return (0);
-	env->infile.fd = get_fd(env->infile.file_name, HEREDOC, env->heredoc);
+	tmp_fd = get_fd(env->infile.file_name, HEREDOC, env->heredoc);
 	if (env->infile.fd == -1)
 		return (0);
-	fill_here_doc(env);
-	close(env->infile.fd);
 	env->infile.fd = get_fd(env->infile.file_name, INFILE, 0);
 	unlink((const char *)env->infile.file_name);
+	fill_here_doc(env);
+	close(tmp_fd);
 	return (1);
 }
