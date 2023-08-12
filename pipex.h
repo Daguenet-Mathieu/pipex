@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 21:19:46 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 23:01:30 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/12 04:27:29 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	handle_invalide_in(t_env *env);
 int		ft_dup(int infile, int outfile, t_env *env, int i);
 void	dup_all(t_env *env, int i);
 void	close_all(t_env *env, int i);
-void	fill_here_doc(t_env *env);
+void	fill_here_doc(t_env *env, int tmp_fd);
 int		get_fd(unsigned char *file_name, int option, int option_2);
 void	close_parent(t_env *env, int i);
 

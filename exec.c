@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:49 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/09 17:34:15 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/12 19:34:26 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,11 @@ void	super_exec(t_env *env, int i)
 
 	if (env->infile.fd == -1 && i == 0)
 		handle_invalide_in(env);
-	if (env->outfile.fd == -1)
+	if (env->outfile.fd == -1 && i == env->nb_cmd -1)
+	{
+		dprintf(2, "i == %d\n", i);
 		handle_invalid_out(env);
+	}
 	path = ft_split(get_path(env->env), ':');
 	cmd = ft_split(env->lst_cmd[i], ' ');
 	if (!cmd)

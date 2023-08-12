@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 21:19:27 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 21:34:40 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:09:29 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	handle_arg(char **argv, int size, t_env *env)
 {
 	if (size < 4)
 		return (0);
-	if (!ft_strncmp(argv[0], "here_doc", 8))
+	if (!ft_strncmp(argv[0], "here_doc", 9))
 		env->heredoc = 1;
 	if (env->heredoc && size < 5)
 		return (0);

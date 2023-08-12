@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/06 21:47:01 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:13:22 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,19 @@ int	waiting(int *pids, int nb_cmd)
 
 	i = 0;
 	(void) nb_cmd;
+	for (int i = 0; i < nb_cmd; i++)
 	while (i < nb_cmd)
 	{
 		pid = waitpid(pids[i], &status, 0);
-		if (pid == -1)
-			perror("waitpid");
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			return (WTERMSIG(status));
+		if (i == nb_cmd - 1)
+		{
+			if (pid == -1)
+				perror("waitpid");
+			if (WIFEXITED(status))
+				return (WEXITSTATUS(status));
+			else if (WIFSIGNALED(status))
+				return (WTERMSIG(status));
+		}
 		i++;
 	}
 	return (status);

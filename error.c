@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/09 17:41:43 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:32:26 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ int	failure_critic(t_env *env)
 		free_infile(env);
 	if (env->outfile.file_name)
 		free_outfile(env);
+	close(env->pipe[0]);
+	close(env->pipe[1]);
+	if (env->prev_pipe)
+		close(env->prev_pipe);
 	free(env->pids);
 	env->pids = NULL;
 	return (0);
