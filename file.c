@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:25 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/12 04:42:49 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/14 21:45:02 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static unsigned char	*get_file_name(void)
 	}
 	file_name[15] = 0;
 	file_name[5] = '.';
-	printf("filename == %s\n", file_name);
 	return (file_name);
 }
 
@@ -90,7 +89,6 @@ void	fill_here_doc(t_env *env, int tmp_fd)
 		if (!verif_heredoc(line, env->lst_cmd[-1], ft_strlen(env->lst_cmd[-1])))
 			break ;
 		ft_putstr_fd(line, tmp_fd);
-		perror("write");
 		free(line);
 	}
 	free(line);
@@ -104,7 +102,6 @@ int	get_infile_heredoc(t_env *env)
 	if (!env->infile.file_name)
 		return (0);
 	tmp_fd = get_fd(env->infile.file_name, HEREDOC, env->heredoc);
-	printf("fd == %d\n", tmp_fd);
 	if (tmp_fd == -1)
 		return (0);
 	env->infile.fd = get_fd(env->infile.file_name, INFILE, 0);

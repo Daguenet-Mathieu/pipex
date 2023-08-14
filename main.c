@@ -6,12 +6,12 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/12 20:13:22 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/14 18:53:07 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
+/*
 int	waiting(int *pids, int nb_cmd)
 {
 	int		i;
@@ -19,8 +19,6 @@ int	waiting(int *pids, int nb_cmd)
 	int		status;
 
 	i = 0;
-	(void) nb_cmd;
-	for (int i = 0; i < nb_cmd; i++)
 	while (i < nb_cmd)
 	{
 		pid = waitpid(pids[i], &status, 0);
@@ -36,6 +34,40 @@ int	waiting(int *pids, int nb_cmd)
 		i++;
 	}
 	return (status);
+}
+*/
+
+int	waiting(int *pids, int nb_cmd)
+{
+	int		i;
+	pid_t	pid;
+	int		status;
+	int		res;
+	int		pid_waited;
+
+	i = 0;
+	pid_waited = 0;
+	while (pid_waited < nb_cmd )
+	{
+		if (pids[i] != -1)
+			pid = waitpid(pids[i], &status, WNOHANG);
+		if (pid > 0 && pids[i] != -1)
+		{
+			if (i == nb_cmd - 1)
+			{
+				if (WIFEXITED(status))
+					res = WEXITSTATUS(status);
+				else if (WIFSIGNALED(status))
+					res = (WTERMSIG(status));
+			}
+			pids[i] = -1;
+			pid_waited++;
+		}
+		i++;
+		if (i == nb_cmd)
+			i = 0;
+	}
+	return (res);
 }
 
 int	main(int argc, char **argv, char **env_p)

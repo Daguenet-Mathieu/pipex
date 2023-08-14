@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 21:19:46 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/12 04:27:29 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/14 20:08:43 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include <string.h>
+# include <errno.h>
 
 # define READ 0
 # define WRITE 1
@@ -31,6 +33,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 150
 # endif
+
+extern int errno ;
 
 typedef struct s_file
 {

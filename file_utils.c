@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:24:52 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/09 17:38:08 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/14 20:48:51 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int	get_outfile(t_env *env, char *argv)
 	env->outfile.fd = get_fd(env->outfile.file_name, OUTFILE, env->heredoc);
 	if (env->outfile.fd == -1)
 	{
-		bash_error("bash: ", (char *)env->outfile.file_name, \
-		" Permission denied\n");
-		return (0);
+		bash_error("bash: ", (char *)env->outfile.file_name, ": ");
+		error(strerror(errno));
+		error("\n");
 	}
 	return (1);
 }
@@ -49,5 +49,11 @@ int	get_infile(t_env *env, char *argv)
 	if (!env->infile.file_name)
 		return (0);
 	env->infile.fd = get_fd(env->infile.file_name, INFILE, env->heredoc);
+	if (env->infile.fd == -1)
+	{
+		bash_error("bash: ", (char *)env->infile.file_name, ": ");
+		error(strerror(errno));
+		error("\n");
+	}
 	return (1);
 }

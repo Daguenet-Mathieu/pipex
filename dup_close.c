@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 21:18:48 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/10 18:26:36 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/14 18:09:33 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	dup_all(t_env *env, int i)
 
 void	close_all(t_env *env, int i)
 {
+	if (i > 0 && env->prev_pipe > 0)
+		close(env->prev_pipe);
 	if (i == 0)
 	{
 		free_infile(env);
@@ -69,13 +71,9 @@ void	close_all(t_env *env, int i)
 		free_outfile(env);
 	}
 	else if (i == env->nb_cmd - 1)
-	{
-		close(env->prev_pipe);
 		free_outfile(env);
-	}
 	else
 	{
-		close(env->prev_pipe);
 		close(env->pipe[WRITE]);
 		close(env->pipe[READ]);
 		free_outfile(env);
