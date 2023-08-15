@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 21:19:46 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/14 20:08:43 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/15 15:08:18 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 150
 # endif
-
-extern int errno ;
 
 typedef struct s_file
 {
@@ -88,5 +86,7 @@ void	close_all(t_env *env, int i);
 void	fill_here_doc(t_env *env, int tmp_fd);
 int		get_fd(unsigned char *file_name, int option, int option_2);
 void	close_parent(t_env *env, int i);
+void	print_error(char *err, char *cmd, int nb);
+void	ft_strncpy(char *s1, char *s2, int n);
 
 #endif

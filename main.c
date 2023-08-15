@@ -6,7 +6,7 @@
 /*   By: madaguen <madaguen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 19:25:30 by madaguen          #+#    #+#             */
-/*   Updated: 2023/08/14 18:53:07 by madaguen         ###   ########.fr       */
+/*   Updated: 2023/08/15 15:13:55 by madaguen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,36 @@ int	waiting(int *pids, int nb_cmd)
 }
 */
 
+int	get_status(int *status)
+{
+	int	res;
+
+	res = 0;
+	if (WIFEXITED(*status))
+		res = WEXITSTATUS(*status);
+	else if (WIFSIGNALED(*status))
+		res = (WTERMSIG(*status));
+	return (res);
+}
+
 int	waiting(int *pids, int nb_cmd)
 {
 	int		i;
 	pid_t	pid;
-	int		status;
 	int		res;
+	int		status;
 	int		pid_waited;
 
 	i = 0;
 	pid_waited = 0;
-	while (pid_waited < nb_cmd )
+	while (pid_waited < nb_cmd)
 	{
 		if (pids[i] != -1)
 			pid = waitpid(pids[i], &status, WNOHANG);
 		if (pid > 0 && pids[i] != -1)
 		{
 			if (i == nb_cmd - 1)
-			{
-				if (WIFEXITED(status))
-					res = WEXITSTATUS(status);
-				else if (WIFSIGNALED(status))
-					res = (WTERMSIG(status));
-			}
+				res = get_status(&status);
 			pids[i] = -1;
 			pid_waited++;
 		}
